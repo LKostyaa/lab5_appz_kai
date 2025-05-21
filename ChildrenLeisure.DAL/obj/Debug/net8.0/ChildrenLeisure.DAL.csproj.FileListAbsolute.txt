@@ -12,3 +12,4 @@ C:\Users\chema\Desktop\APPZ\Lab5_appz\ChildrenLeisure.DAL\obj\Debug\net8.0\refin
 C:\Users\chema\Desktop\APPZ\Lab5_appz\ChildrenLeisure.DAL\obj\Debug\net8.0\ChildrenLeisure.DAL.pdb
 C:\Users\chema\Desktop\APPZ\Lab5_appz\ChildrenLeisure.DAL\obj\Debug\net8.0\ChildrenLeisure.DAL.genruntimeconfig.cache
 C:\Users\chema\Desktop\APPZ\Lab5_appz\ChildrenLeisure.DAL\obj\Debug\net8.0\ref\ChildrenLeisure.DAL.dll
+C:\Users\chema\Desktop\APPZ\Lab5_appz\ChildrenLeisure.DAL\obj\Debug\net8.0\ChildrenLeisure.DAL.sourcelink.json

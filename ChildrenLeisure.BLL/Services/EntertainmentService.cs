@@ -1,5 +1,5 @@
 ﻿using ChildrenLeisure.DAL.Entities;
-using ChildrenLeisure.DAL.Repositories;
+using ChildrenLeisure.DAL.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;

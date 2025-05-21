@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using ChildrenLeisure.DAL.Entities;
-using ChildrenLeisure.DAL.Repositories;
+using ChildrenLeisure.DAL.Interfaces;
 using Microsoft.EntityFrameworkCore;
 
 namespace ChildrenLeisure.BLL.Services
