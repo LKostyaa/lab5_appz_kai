@@ -1,15 +1,12 @@
-﻿using ChildrenLeisure.DAL.Entities;
-using System;
-using System.Collections.Generic;
+﻿using ChildrenLeisure.BLL.DTOs;
+using ChildrenLeisure.BLL.Interfaces;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace ChildrenLeisure.BLL.Services
 {
-    public class PricingService
+    public class PricingService : IPricingService
     {
-        public decimal CalculateOrderPrice(Order order)
+        public decimal CalculateOrderPrice(OrderDto order)
         {
             decimal totalPrice = 0;
 
@@ -20,7 +17,7 @@ namespace ChildrenLeisure.BLL.Services
             }
 
             // Додавання вартості атракціонів
-            if (order.SelectedAttractions != null)
+            if (order.SelectedAttractions != null && order.SelectedAttractions.Any())
             {
                 totalPrice += order.SelectedAttractions.Sum(a => a.Price);
             }

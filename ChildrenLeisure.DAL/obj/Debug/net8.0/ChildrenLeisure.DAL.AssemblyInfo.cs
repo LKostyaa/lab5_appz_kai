@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("ChildrenLeisure.DAL")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+3929c5b4b5c00d72b3910209fd85e16279504269")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+c9369806fa605f89b130363b583f8ae38a17d6af")]
 [assembly: System.Reflection.AssemblyProductAttribute("ChildrenLeisure.DAL")]
 [assembly: System.Reflection.AssemblyTitleAttribute("ChildrenLeisure.DAL")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

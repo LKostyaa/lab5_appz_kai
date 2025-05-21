@@ -1,35 +1,50 @@
-﻿using ChildrenLeisure.DAL.Entities;
+﻿using ChildrenLeisure.BLL.DTOs;
+using ChildrenLeisure.BLL.Interfaces;
+using ChildrenLeisure.BLL.Mapping;
 using ChildrenLeisure.DAL.Interfaces;
-using System;
+using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace ChildrenLeisure.BLL.Services
 {
-    public class EntertainmentService
+    public class EntertainmentService : IEntertainmentService
     {
-        private readonly IRepository<Attraction> _attractionRepository;
-        private readonly IRepository<FairyCharacter> _fairyCharacterRepository;
+        private readonly IUnitOfWork _unitOfWork;
 
-        public EntertainmentService(
-            IRepository<Attraction> attractionRepository,
-            IRepository<FairyCharacter> fairyCharacterRepository)
+        public EntertainmentService(IUnitOfWork unitOfWork)
         {
-            _attractionRepository = attractionRepository;
-            _fairyCharacterRepository = fairyCharacterRepository;
-        }
-        // Отримання всіх атракціонів
-        public IQueryable<Attraction> GetAllAttractions()
-        {
-            return _attractionRepository.GetAll();
+            _unitOfWork = unitOfWork;
         }
 
-        // Отримання всіх казкових героїв
-        public IQueryable<FairyCharacter> GetAllFairyCharacters()
+        public List<AttractionDto> GetAllAttractions()
         {
-            return _fairyCharacterRepository.GetAll();
+            return _unitOfWork.AttractionRepository
+                .GetAll()
+                .AsNoTracking()
+                .Select(a => a.ToDto())
+                .ToList();
+        }
+
+        public List<FairyCharacterDto> GetAllFairyCharacters()
+        {
+            return _unitOfWork.FairyCharacterRepository
+                .GetAll()
+                .AsNoTracking()
+                .Select(c => c.ToDto())
+                .ToList();
+        }
+
+        public AttractionDto GetAttractionById(int id)
+        {
+            var attraction = _unitOfWork.AttractionRepository.GetById(id);
+            return attraction?.ToDto();
+        }
+
+        public FairyCharacterDto GetFairyCharacterById(int id)
+        {
+            var character = _unitOfWork.FairyCharacterRepository.GetById(id);
+            return character?.ToDto();
         }
     }
 }

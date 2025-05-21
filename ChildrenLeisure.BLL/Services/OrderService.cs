@@ -1,40 +1,34 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using ChildrenLeisure.BLL.DTOs;
+using ChildrenLeisure.BLL.Interfaces;
+using ChildrenLeisure.BLL.Mapping;
 using ChildrenLeisure.DAL.Entities;
 using ChildrenLeisure.DAL.Interfaces;
 using Microsoft.EntityFrameworkCore;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace ChildrenLeisure.BLL.Services
 {
-    public class OrderService
+    public class OrderService : IOrderService
     {
-        private readonly IRepository<Order> _orderRepository;
-        private readonly IRepository<Attraction> _attractionRepository;
-        private readonly IRepository<FairyCharacter> _fairyCharacterRepository;
-        private readonly PricingService _pricingService;
+        private readonly IUnitOfWork _unitOfWork;
+        private readonly IPricingService _pricingService;
 
         public OrderService(
-            IRepository<Order> orderRepository,
-            IRepository<Attraction> attractionRepository,
-            IRepository<FairyCharacter> fairyCharacterRepository,
-            PricingService pricingService)
+            IUnitOfWork unitOfWork,
+            IPricingService pricingService)
         {
-            _orderRepository = orderRepository;
-            _attractionRepository = attractionRepository;
-            _fairyCharacterRepository = fairyCharacterRepository;
+            _unitOfWork = unitOfWork;
             _pricingService = pricingService;
         }
 
-        public Order CreateOrder(
+        public OrderDto CreateOrder(
             string customerName,
             string phoneNumber,
             bool isBirthdayParty,
             int? fairyCharacterId = null,
-            int[]? attractionIds = null,
-            int[]? zoneIds = null)
+            int[] attractionIds = null)
         {
             var order = new Order
             {
@@ -48,45 +42,76 @@ namespace ChildrenLeisure.BLL.Services
             // Додавання казкового героя
             if (fairyCharacterId.HasValue)
             {
-                order.FairyCharacter = _fairyCharacterRepository.GetById(fairyCharacterId.Value);
+                var character = _unitOfWork.FairyCharacterRepository.GetById(fairyCharacterId.Value);
+                if (character != null)
+                {
+                    order.FairyCharacterId = fairyCharacterId;
+                    order.FairyCharacter = character;
+                }
             }
 
             // Додавання атракціонів
             if (attractionIds != null && attractionIds.Length > 0)
             {
-                order.SelectedAttractions = _attractionRepository
+                order.SelectedAttractions = _unitOfWork.AttractionRepository
                     .GetAll()
                     .Where(a => attractionIds.Contains(a.Id))
                     .ToList();
             }
 
-            // Розрахунок ціни
-            order.TotalPrice = _pricingService.CalculateOrderPrice(order);
+            // Конвертуємо в DTO для розрахунку ціни
+            var orderDto = order.ToDto();
 
-            return _orderRepository.Add(order);
+            // Розрахунок ціни
+            order.TotalPrice = _pricingService.CalculateOrderPrice(orderDto);
+
+            // Додаємо і зберігаємо в базу
+            _unitOfWork.OrderRepository.Add(order);
+            _unitOfWork.Save();
+
+            return order.ToDto();
         }
-        public Order GetOrderLazy(int orderId)
+
+        public OrderDto GetOrderLazy(int orderId)
         {
-            return _orderRepository.GetById(orderId);
+            var order = _unitOfWork.OrderRepository.GetById(orderId);
+            return order?.ToDto();
         }
-        public Order GetOrderEager(int orderId)
+
+        public OrderDto GetOrderEager(int orderId)
         {
-            return _orderRepository
+            var order = _unitOfWork.OrderRepository
                 .GetAll()
                 .Where(o => o.Id == orderId)
                 .Include(o => o.FairyCharacter)
                 .Include(o => o.SelectedAttractions)
                 .FirstOrDefault();
+
+            return order?.ToDto();
         }
-        // Підтвердження замовлення
-        public Order ConfirmOrder(int orderId)
+
+        public OrderDto ConfirmOrder(int orderId)
         {
-            var order = _orderRepository.GetById(orderId);
+            var order = _unitOfWork.OrderRepository.GetById(orderId);
             if (order == null)
-                throw new ArgumentException("Замовлення не знайдено");
+            {
+                throw new ArgumentException($"Замовлення з ID {orderId} не знайдено");
+            }
 
             order.Status = OrderStatus.Confirmed;
-            return _orderRepository.Update(order);
+            _unitOfWork.OrderRepository.Update(order);
+            _unitOfWork.Save();
+
+            return order.ToDto();
+        }
+
+        public List<OrderDto> GetAllOrders()
+        {
+            return _unitOfWork.OrderRepository
+                .GetAll()
+                .AsNoTracking()
+                .Select(o => o.ToDto())
+                .ToList();
         }
     }
 }
