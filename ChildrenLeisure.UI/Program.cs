@@ -7,6 +7,8 @@ using ChildrenLeisure.DAL.UnitOfWork;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Linq;
+using AutoMapper;
+using ChildrenLeisure.BLL.Mapping;
 
 namespace ChildrenLeisure.UI
 {
@@ -19,12 +21,17 @@ namespace ChildrenLeisure.UI
 
             using var context = new AppDbContext();
             context.Database.EnsureCreated();
+            var config = new MapperConfiguration(cfg =>
+            {
+                cfg.AddProfile<MappingProfile>();
+            });
+            var mapper = config.CreateMapper();
 
             // Unit of Work та сервіси
             var unitOfWork = new UnitOfWork(context);
             var pricingService = new PricingService();
-            var entertainmentService = new EntertainmentService(unitOfWork);
-            var orderService = new OrderService(unitOfWork, pricingService);
+            var entertainmentService = new EntertainmentService(unitOfWork, mapper);
+            var orderService = new OrderService(unitOfWork, pricingService, mapper);
 
             while (true)
             {

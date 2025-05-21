@@ -1,8 +1,8 @@
 ﻿using ChildrenLeisure.BLL.DTOs;
 using ChildrenLeisure.BLL.Interfaces;
-using ChildrenLeisure.BLL.Mapping;
 using ChildrenLeisure.DAL.Entities;
 using ChildrenLeisure.DAL.Interfaces;
+using AutoMapper;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -14,13 +14,16 @@ namespace ChildrenLeisure.BLL.Services
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IPricingService _pricingService;
+        private readonly IMapper _mapper;
 
         public OrderService(
             IUnitOfWork unitOfWork,
-            IPricingService pricingService)
+            IPricingService pricingService,
+            IMapper mapper)
         {
             _unitOfWork = unitOfWork;
             _pricingService = pricingService;
+            _mapper = mapper;
         }
 
         public OrderDto CreateOrder(
@@ -60,7 +63,7 @@ namespace ChildrenLeisure.BLL.Services
             }
 
             // Конвертуємо в DTO для розрахунку ціни
-            var orderDto = order.ToDto();
+            var orderDto = _mapper.Map<OrderDto>(order);
 
             // Розрахунок ціни
             order.TotalPrice = _pricingService.CalculateOrderPrice(orderDto);
@@ -69,13 +72,13 @@ namespace ChildrenLeisure.BLL.Services
             _unitOfWork.OrderRepository.Add(order);
             _unitOfWork.Save();
 
-            return order.ToDto();
+            return _mapper.Map<OrderDto>(order);
         }
 
         public OrderDto GetOrderLazy(int orderId)
         {
             var order = _unitOfWork.OrderRepository.GetById(orderId);
-            return order?.ToDto();
+            return order == null ? null : _mapper.Map<OrderDto>(order);
         }
 
         public OrderDto GetOrderEager(int orderId)
@@ -87,7 +90,7 @@ namespace ChildrenLeisure.BLL.Services
                 .Include(o => o.SelectedAttractions)
                 .FirstOrDefault();
 
-            return order?.ToDto();
+            return order == null ? null : _mapper.Map<OrderDto>(order);
         }
 
         public OrderDto ConfirmOrder(int orderId)
@@ -102,7 +105,7 @@ namespace ChildrenLeisure.BLL.Services
             _unitOfWork.OrderRepository.Update(order);
             _unitOfWork.Save();
 
-            return order.ToDto();
+            return _mapper.Map<OrderDto>(order);
         }
 
         public List<OrderDto> GetAllOrders()
@@ -110,7 +113,7 @@ namespace ChildrenLeisure.BLL.Services
             return _unitOfWork.OrderRepository
                 .GetAll()
                 .AsNoTracking()
-                .Select(o => o.ToDto())
+                .Select(o => _mapper.Map<OrderDto>(o))
                 .ToList();
         }
     }

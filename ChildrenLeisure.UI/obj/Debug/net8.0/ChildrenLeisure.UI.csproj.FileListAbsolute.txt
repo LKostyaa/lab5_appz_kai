@@ -139,3 +139,5 @@ C:\Users\chema\Desktop\APPZ\Lab5_appz\ChildrenLeisure.UI\obj\Debug\net8.0\refint
 C:\Users\chema\Desktop\APPZ\Lab5_appz\ChildrenLeisure.UI\obj\Debug\net8.0\ChildrenLeisure.UI.pdb
 C:\Users\chema\Desktop\APPZ\Lab5_appz\ChildrenLeisure.UI\obj\Debug\net8.0\ChildrenLeisure.UI.genruntimeconfig.cache
 C:\Users\chema\Desktop\APPZ\Lab5_appz\ChildrenLeisure.UI\obj\Debug\net8.0\ref\ChildrenLeisure.UI.dll
+C:\Users\chema\Desktop\APPZ\Lab5_appz\ChildrenLeisure.UI\bin\Debug\net8.0\AutoMapper.dll
+C:\Users\chema\Desktop\APPZ\Lab5_appz\ChildrenLeisure.UI\bin\Debug\net8.0\AutoMapper.Extensions.Microsoft.DependencyInjection.dll

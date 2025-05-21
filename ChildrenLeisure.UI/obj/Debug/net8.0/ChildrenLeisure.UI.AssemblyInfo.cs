@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("ChildrenLeisure.UI")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+c9369806fa605f89b130363b583f8ae38a17d6af")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+e2846ee9987b63d5407de9d6b5cf70030ee432be")]
 [assembly: System.Reflection.AssemblyProductAttribute("ChildrenLeisure.UI")]
 [assembly: System.Reflection.AssemblyTitleAttribute("ChildrenLeisure.UI")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
